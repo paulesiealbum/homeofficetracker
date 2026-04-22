@@ -1,0 +1,76 @@
+{
+  "identifier" : "HomeofficeTrackerTesting",
+  "nonConsumableProducts" : [],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_interruptedPurchasesEnabled" : false,
+    "_locale" : "de_DE",
+    "_storefront" : "DEU",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "com.Paul.HomeofficeTracker.premium",
+      "localizations" : [
+        {
+          "displayName" : "Homeoffice Tracker Premium",
+          "locale" : "de_DE"
+        }
+      ],
+      "name" : "Homeoffice Tracker Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "gracePeriod" : "P0D",
+          "internalID" : "com.Paul.HomeofficeTracker.premium.annual",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Schaltet alle Premium-Features frei: PDF/CSV-Export, Pendelkostenrechner, mehrere Arbeitsstätten und Wochenmuster Auto-Fill. Kündigung jederzeit.",
+              "displayName" : "Premium Jahres-Abo",
+              "locale" : "de_DE"
+            },
+            {
+              "description" : "Unlocks all premium features: PDF/CSV export, commuter deduction calculator, multiple workplaces, and weekly auto-fill. Cancel anytime.",
+              "displayName" : "Premium Annual",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.Paul.HomeofficeTracker.premium.annual",
+          "referenceName" : "Premium Jahres-Abo",
+          "subscriptionGroupID" : "com.Paul.HomeofficeTracker.premium",
+          "subscriptionPeriod" : "P1Y",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
