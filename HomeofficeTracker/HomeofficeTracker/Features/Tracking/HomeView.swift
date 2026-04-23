@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -862,6 +863,7 @@ struct HomeView: View {
             let newDay = WorkDay(date: date, isHomeoffice: true)
             modelContext.insert(newDay)
         }
+        notifyWidget()
     }
 
     private func openDetailSheet(for date: Date) {
@@ -890,6 +892,7 @@ struct HomeView: View {
             let newDay = WorkDay(date: date, isHomeoffice: isHomeoffice, note: note.isEmpty ? nil : note, specialType: specialType)
             modelContext.insert(newDay)
         }
+        notifyWidget()
     }
 
     private func toggleToday() {
@@ -908,6 +911,7 @@ struct HomeView: View {
             let newDay = WorkDay(date: Date(), isHomeoffice: true)
             modelContext.insert(newDay)
         }
+        notifyWidget()
     }
 
     /// Löscht den heutigen Eintrag vollständig (Reset auf „kein Eintrag").
@@ -921,6 +925,11 @@ struct HomeView: View {
         )
         pushUndo([snap])
         modelContext.delete(existing)
+        notifyWidget()
+    }
+
+    private func notifyWidget() {
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     // MARK: - Undo
@@ -950,6 +959,7 @@ struct HomeView: View {
                 }
             }
         }
+        notifyWidget()
     }
 
     // MARK: - Feiertagskalender
@@ -993,7 +1003,10 @@ struct HomeView: View {
             let newDay = WorkDay(date: date, isHomeoffice: isHO)
             modelContext.insert(newDay)
         }
-        if !snapshots.isEmpty { pushUndo(snapshots) }
+        if !snapshots.isEmpty {
+            pushUndo(snapshots)
+            notifyWidget()
+        }
     }
 }
 
