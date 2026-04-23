@@ -386,7 +386,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -424,7 +424,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -579,7 +579,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -617,7 +617,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -653,7 +653,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
@@ -683,7 +683,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
@@ -713,7 +713,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
@@ -743,7 +743,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
