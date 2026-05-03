@@ -13,8 +13,10 @@ struct PDFExportService {
         days: [WorkDay],
         year: Int,
         userName: String,
+        taxID: String = "",
         employmentType: EmploymentType,
         homeAddress: String = "",
+        employerName: String = "",
         workplacePeriods: [WorkplacePeriod] = []
     ) -> Data {
         let cfg = LegalConfiguration.config(for: year)
@@ -38,8 +40,10 @@ struct PDFExportService {
             year: year,
             cfg: cfg,
             userName: userName,
+            taxID: taxID,
             employmentType: employmentType,
             homeAddress: homeAddress,
+            employerName: employerName,
             pendlerDetails: pendlerDetails
         )
         return renderHTMLtoPDF(html: html)
@@ -52,8 +56,10 @@ struct PDFExportService {
         year: Int,
         cfg: LegalConfiguration.YearConfig,
         userName: String,
+        taxID: String,
         employmentType: EmploymentType,
         homeAddress: String,
+        employerName: String,
         pendlerDetails: [CommuterConstants.PeriodDetail]
     ) -> String {
         let hoCapped     = min(hoDays.count, cfg.maxDays)
@@ -72,107 +78,191 @@ struct PDFExportService {
         <head>
         <meta charset="UTF-8">
         <style>
+          /* ── Reset ── */
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
-                 font-size: 10pt; color: #1a1a1a; line-height: 1.4; }
-          .app-label { font-size: 8pt; color: #999; margin-bottom: 12px; }
-          h1 { font-size: 18pt; font-weight: 700; text-align: center; margin-bottom: 4px; }
-          h2 { font-size: 12pt; font-weight: 700; margin: 20px 0 10px 0;
-               padding-bottom: 4px; border-bottom: 2px solid #1a7f37; color: #1a7f37; }
+
+          /* ── Basis ── */
+          body {
+            font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
+            font-size: 10pt; color: #1a1a1a; line-height: 1.45;
+          }
+
+          /* ── Typografie ── */
+          .app-label {
+            font-size: 7.5pt; color: #aaa; margin-bottom: 10px; letter-spacing: 0.2px;
+          }
+          h1 {
+            font-size: 17pt; font-weight: 700; text-align: center; margin-bottom: 4px;
+            page-break-after: avoid; break-after: avoid;
+          }
+          h2 {
+            font-size: 11.5pt; font-weight: 700; margin: 22px 0 10px 0;
+            padding-bottom: 5px; border-bottom: 2px solid #1a7f37; color: #1a7f37;
+            page-break-after: avoid; break-after: avoid;
+          }
           h2.pendler { border-bottom-color: #1a5fa0; color: #1a5fa0; }
-          h2.gesamt  { border-bottom-color: #444; color: #444; }
-          .subtitle { font-size: 11pt; color: #555; text-align: center; margin-bottom: 20px; }
-          hr { border: none; border-top: 1px solid #ddd; margin: 16px 0; }
-          .info-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-          .info-table td { padding: 3px 0; vertical-align: top; width: 50%; }
-          .info-label { font-size: 7.5pt; color: #999; text-transform: uppercase;
-                        letter-spacing: 0.3px; display: block; margin-bottom: 1px; }
+          h2.gesamt  { border-bottom-color: #555;    color: #555;    }
+          .subtitle {
+            font-size: 10.5pt; color: #555; text-align: center; margin-bottom: 18px;
+          }
+          hr { border: none; border-top: 1px solid #ddd; margin: 14px 0; }
+
+          /* ── Dokument-Kopf (Titel + Info-Tabelle) ── */
+          .doc-header { page-break-inside: avoid; break-inside: avoid; }
+          .info-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+          .info-table td { padding: 4px 0; vertical-align: top; width: 50%; }
+          .info-label {
+            font-size: 7pt; color: #aaa; text-transform: uppercase;
+            letter-spacing: 0.4px; display: block; margin-bottom: 2px;
+          }
           .info-value { font-size: 10pt; font-weight: 600; }
-          .summary-box { border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
-                         border: 1px solid #e8eaed; }
+
+          /* ── Zusammenfassungsboxen ── */
+          .summary-box {
+            border-radius: 7px; padding: 13px 15px; margin-bottom: 14px;
+            border: 1px solid #e8eaed;
+            page-break-inside: avoid; break-inside: avoid;
+          }
           .summary-box.ho      { background: #f4faf4; border-color: #c8dfc8; }
           .summary-box.pendler { background: #f0f6fc; border-color: #b8d0e8; }
           .summary-box.gesamt  { background: #f5f5f5; border-color: #ddd; }
-          .summary-title { font-size: 7.5pt; color: #999; text-transform: uppercase;
-                           letter-spacing: 0.3px; margin-bottom: 10px; }
+          .summary-title {
+            font-size: 7pt; color: #aaa; text-transform: uppercase;
+            letter-spacing: 0.4px; margin-bottom: 9px;
+          }
           .summary-row { display: table; width: 100%; padding: 3px 0; }
           .summary-row .label { display: table-cell; color: #555; }
           .summary-row .value { display: table-cell; text-align: right; font-weight: 500; }
-          .summary-divider { border: none; border-top: 1px solid #d0d5db; margin: 10px 0; }
+          .summary-divider { border: none; border-top: 1px solid #d0d5db; margin: 9px 0; }
           .summary-total-row { display: table; width: 100%; padding: 4px 0; }
           .summary-total-row .label { display: table-cell; font-size: 11pt; font-weight: 700; }
-          .summary-total-row .value { display: table-cell; text-align: right;
-                                      font-size: 13pt; font-weight: 700; }
-          .ho-total-value   { color: #1a7f37; }
+          .summary-total-row .value {
+            display: table-cell; text-align: right; font-size: 13pt; font-weight: 700;
+          }
+          .ho-total-value      { color: #1a7f37; }
           .pendler-total-value { color: #1a5fa0; }
           .gesamt-total-value  { color: #333; }
-          .summary-max { font-size: 8pt; color: #888; margin-top: 6px; }
-          .cap-warning { font-size: 8pt; color: #b85c00; margin-top: 6px;
-                         background: #fff8f0; padding: 6px 8px; border-radius: 4px;
-                         border-left: 3px solid #e07000; }
-          table.day-table { width: 100%; border-collapse: collapse;
-                            font-size: 9.5pt; margin-top: 4px; }
-          table.day-table thead th { background: #f0f2f4; padding: 6px 8px;
-                                     text-align: left; font-size: 8pt;
-                                     text-transform: uppercase; letter-spacing: 0.3px;
-                                     color: #666; border-bottom: 2px solid #ccc; }
+          .summary-max { font-size: 7.5pt; color: #888; margin-top: 5px; }
+          .cap-warning {
+            font-size: 8pt; color: #b85c00; margin-top: 6px;
+            background: #fff8f0; padding: 6px 8px; border-radius: 4px;
+            border-left: 3px solid #e07000;
+            page-break-inside: avoid; break-inside: avoid;
+          }
+
+          /* ── Tagesliste ── */
+          table.day-table {
+            width: 100%; border-collapse: collapse; font-size: 9pt; margin-top: 4px;
+          }
+          /* Thead auf jeder Seite wiederholen (RECHTSLAGE_EXPORT.md §4) */
+          table.day-table thead { display: table-header-group; }
+          table.day-table thead th {
+            background: #f0f2f4; padding: 6px 8px;
+            text-align: left; font-size: 7.5pt; text-transform: uppercase;
+            letter-spacing: 0.3px; color: #666;
+            border-bottom: 2px solid #ccc; border-top: 1px solid #ccc;
+          }
           table.day-table thead th.right { text-align: right; }
-          table.day-table tbody td { padding: 5px 8px; border-bottom: 1px solid #efefef;
-                                     vertical-align: middle; }
+          table.day-table tbody { display: table-row-group; }
+          table.day-table tbody td {
+            padding: 5px 8px; border-bottom: 1px solid #efefef; vertical-align: middle;
+          }
           table.day-table tbody td.right { text-align: right; }
-          table.day-table tbody td.note  { color: #777; font-size: 8.5pt; }
-          tr.month-header td { background: #eaedf0; font-weight: 700; font-size: 9pt;
-                               padding: 7px 8px; border-bottom: 1px solid #ccc;
-                               border-top: 2px solid #ccc; }
-          tr.subtotal td { background: #f8f9fa; font-weight: 600; font-size: 9pt;
-                           padding: 5px 8px; border-top: 1px solid #ddd;
-                           border-bottom: 2px solid #ccc; color: #444; }
+          table.day-table tbody td.note  { color: #777; font-size: 8pt; }
+
+          /* Zeilenumbruch-Kontrolle in der Tabelle */
+          table.day-table tr      { page-break-inside: avoid; break-inside: avoid; }
+          tr.month-header td {
+            background: #eaedf0; font-weight: 700; font-size: 9pt;
+            padding: 7px 8px; border-bottom: 1px solid #ccc; border-top: 2px solid #ccc;
+          }
+          /* Monatsheader nicht am Ende einer Seite alleine lassen */
+          tr.month-header { page-break-after: avoid; break-after: avoid; }
+
+          tr.subtotal td {
+            background: #f8f9fa; font-weight: 600; font-size: 9pt;
+            padding: 5px 8px; border-top: 1px solid #ddd;
+            border-bottom: 2px solid #ccc; color: #444;
+          }
           tr.subtotal td.right { text-align: right; }
-          tr.grand-total td { background: #edf7ef; font-weight: 700; font-size: 10pt;
-                              padding: 8px 8px; border-top: 2px solid #1a7f37; color: #1a7f37; }
+          /* Subtotal nicht von letzter Datenzeile trennen */
+          tr.subtotal   { page-break-before: avoid; break-before: avoid; }
+
+          tr.grand-total td {
+            background: #edf7ef; font-weight: 700; font-size: 10pt;
+            padding: 8px 8px; border-top: 2px solid #1a7f37; color: #1a7f37;
+          }
           tr.grand-total td.right { text-align: right; }
-          .pendler-period-box { background: #f0f6fc; border: 1px solid #c0d8f0;
-                                border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
-          .pendler-period-title { font-size: 10pt; font-weight: 700; margin-bottom: 8px;
-                                  color: #1a5fa0; }
-          .selbstauskunft { margin-top: 20px; padding: 12px 14px; border: 1px solid #c8dfc8;
-                            border-radius: 6px; background: #f4faf4; }
-          .selbstauskunft-title { font-size: 8.5pt; font-weight: 600; color: #1a5c1a;
-                                  margin-bottom: 6px; }
-          .selbstauskunft-text { font-size: 8.5pt; color: #2a2a2a; line-height: 1.5; }
-          .disclaimer { font-size: 7.5pt; color: #888; margin-top: 20px; padding-top: 12px;
-                        border-top: 1px solid #e0e0e0; line-height: 1.55; }
+          /* Gesamtzeile nicht vom Rest trennen */
+          tr.grand-total { page-break-before: avoid; break-before: avoid; }
+
+          /* ── Pendler-Perioden ── */
+          .pendler-period-box {
+            background: #f0f6fc; border: 1px solid #c0d8f0;
+            border-radius: 7px; padding: 12px 14px; margin-bottom: 12px;
+            page-break-inside: avoid; break-inside: avoid;
+          }
+          .pendler-period-title {
+            font-size: 10pt; font-weight: 700; margin-bottom: 8px; color: #1a5fa0;
+          }
+
+          /* ── Footer-Block (Selbstauskunft + Disclaimer) ── */
+          .footer-block { margin-top: 6px; }
+          .selbstauskunft {
+            padding: 12px 14px; border: 1px solid #c8dfc8;
+            border-radius: 6px; background: #f4faf4;
+            page-break-inside: avoid; break-inside: avoid;
+          }
+          .selbstauskunft-title {
+            font-size: 8.5pt; font-weight: 700; color: #1a5c1a; margin-bottom: 6px;
+            text-transform: uppercase; letter-spacing: 0.3px;
+          }
+          .selbstauskunft-text { font-size: 8.5pt; color: #2a2a2a; line-height: 1.55; }
+          .sig-table {
+            width: 100%; margin-top: 20px; border-collapse: collapse;
+            page-break-inside: avoid; break-inside: avoid;
+          }
+          .sig-line {
+            border-bottom: 1px solid #555; height: 28px; display: block;
+          }
+          .sig-label { font-size: 7pt; color: #999; margin-top: 3px; display: block; }
+          .disclaimer {
+            font-size: 7pt; color: #888; margin-top: 14px; padding-top: 10px;
+            border-top: 1px solid #e0e0e0; line-height: 1.55;
+            page-break-inside: avoid; break-inside: avoid;
+          }
           .disclaimer p { margin-bottom: 5px; }
           .disclaimer strong { color: #555; }
         </style>
         </head>
         <body>
-          <p class="app-label">Homeoffice-Tracker · Steuerjahr \(year)</p>
-          <h1>Steuernachweis Homeoffice &amp; Pendler</h1>
-          <p class="subtitle">Steuerjahr \(year) · Erstellt am \(createdOn)</p>
-          <hr>
 
-          \(buildInfoTable(nameDisplay: nameDisplay, employmentType: employmentType, homeAddress: homeAddress))
+          <!-- ═══ KOPFZEILE (bleibt zusammen) ══════════════════════════ -->
+          <div class="doc-header">
+            <p class="app-label">Homeoffice-Tracker · Steuerjahr \(year)</p>
+            <h1>Steuernachweis Homeoffice &amp; Pendler</h1>
+            <p class="subtitle">Steuerjahr \(year) · Erstellt am \(createdOn)</p>
+            <hr>
+            \(buildInfoTable(nameDisplay: nameDisplay, taxID: taxID, employmentType: employmentType, homeAddress: homeAddress, employerName: employerName))
+          </div>
 
-          <!-- ═══════════════════════════════════════════════════════════ -->
-          <!-- SECTION 1: HOMEOFFICE-PAUSCHALE                            -->
-          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- ═══ SECTION 1: HOMEOFFICE-PAUSCHALE ══════════════════════ -->
           <h2>1. Homeoffice-Pauschale</h2>
           \(buildHOSummary(hoDays: hoDays, hoCapped: hoCapped, hoTotal: hoTotal, cfg: cfg))
           \(buildHOTable(hoDays: hoDays, cfg: cfg))
 
-          <!-- ═══════════════════════════════════════════════════════════ -->
-          <!-- SECTION 2: ENTFERNUNGSPAUSCHALE                            -->
-          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- ═══ SECTION 2: ENTFERNUNGSPAUSCHALE ══════════════════════ -->
           \(hasPendler ? buildPendlerSection(details: pendlerDetails, pendlerTotal: pendlerTotal, year: year) : "")
 
-          <!-- ═══════════════════════════════════════════════════════════ -->
-          <!-- GESAMTÜBERSICHT                                            -->
-          <!-- ═══════════════════════════════════════════════════════════ -->
+          <!-- ═══ SECTION 3: GESAMTÜBERSICHT ═══════════════════════════ -->
           \(hasPendler ? buildGesamtSection(hoTotal: hoTotal, pendlerTotal: pendlerTotal, gesamtTotal: gesamtTotal) : "")
 
-          \(buildSelbstauskunft())
-          \(buildDisclaimer(cfg: cfg, employmentType: employmentType, hasPendler: hasPendler, pendlerDetails: pendlerDetails))
+          <!-- ═══ FOOTER: SELBSTAUSKUNFT + DISCLAIMER ══════════════════ -->
+          <div class="footer-block">
+            \(buildSelbstauskunft())
+            \(buildDisclaimer(cfg: cfg, employmentType: employmentType, hasPendler: hasPendler, pendlerDetails: pendlerDetails))
+          </div>
+
         </body>
         </html>
         """
@@ -182,9 +272,31 @@ struct PDFExportService {
 
     private static func buildInfoTable(
         nameDisplay: String,
+        taxID: String,
         employmentType: EmploymentType,
-        homeAddress: String
+        homeAddress: String,
+        employerName: String
     ) -> String {
+        let taxIDRow = taxID.isEmpty ? "" : """
+        <tr>
+          <td><span class="info-label">Steueridentifikationsnummer</span>
+              <span class="info-value">\(taxID)</span></td>
+          <td></td>
+        </tr>
+        """
+        let employerLabel: String
+        switch employmentType {
+        case .civilServant: employerLabel = "Dienstherr / Behörde"
+        case .selfEmployed: employerLabel = "Unternehmen / Firma"
+        default:            employerLabel = "Arbeitgeber"
+        }
+        let employerRow = employerName.isEmpty ? "" : """
+        <tr>
+          <td><span class="info-label">\(employerLabel)</span>
+              <span class="info-value">\(employerName)</span></td>
+          <td></td>
+        </tr>
+        """
         let adressRow = homeAddress.isEmpty ? "" : """
         <tr>
           <td colspan="2">
@@ -206,6 +318,8 @@ struct PDFExportService {
                 <span class="info-value">\(employmentType.deductionType)</span></td>
             <td></td>
           </tr>
+          \(taxIDRow)
+          \(employerRow)
           \(adressRow)
         </table>
         """
@@ -334,7 +448,10 @@ struct PDFExportService {
             let threshold = CommuterConstants.threshold
             let rate21 = CommuterConstants.rateFrom21km(year: year)
             let rateBreakdown: String
-            if km <= threshold {
+            if CommuterConstants.isFlatRate(year: year) {
+                // Ab 2026: Flat Rate 0,38 €/km für alle Kilometer (Steueränderungsgesetz 2025)
+                rateBreakdown = "\(km) km × 0,38 €/km = \(detail.perDay.eur)/Tag"
+            } else if km <= threshold {
                 rateBreakdown = "\(km) km × 0,30 €/km = \(detail.perDay.eur)/Tag"
             } else {
                 rateBreakdown = "\(threshold) km × 0,30 €/km + \(km - threshold) km × \(String(format: "%.2f", rate21).replacingOccurrences(of: ".", with: ",")) €/km = \(detail.perDay.eur)/Tag"
@@ -425,10 +542,22 @@ struct PDFExportService {
             Ich versichere, dass ich an den oben aufgeführten Homeoffice-Tagen meine berufliche Tätigkeit
             überwiegend in meiner häuslichen Wohnung ausgeübt habe und an diesen Tagen keine
             außerhalb der häuslichen Wohnung belegene erste Tätigkeitsstätte aufgesucht wurde
-            (§ 4 Abs. 5 Satz 1 Nr. 6c EStG).
-            An den erfassten Bürotagen habe ich die angegebene erste Tätigkeitsstätte tatsächlich aufgesucht.
-            Die Angaben sind vollständig und nach bestem Wissen und Gewissen zutreffend.
+            (§ 4 Abs. 5 Satz 1 Nr. 6c EStG). An den erfassten Bürotagen habe ich die angegebene
+            erste Tätigkeitsstätte tatsächlich aufgesucht. Die Angaben sind vollständig und
+            nach bestem Wissen und Gewissen zutreffend.
           </p>
+          <table class="sig-table">
+            <tr>
+              <td style="width:45%; padding-right:24px;">
+                <span class="sig-line"></span>
+                <span class="sig-label">Ort, Datum</span>
+              </td>
+              <td style="width:55%; padding-left:24px;">
+                <span class="sig-line"></span>
+                <span class="sig-label">Unterschrift Steuerpflichtiger/e</span>
+              </td>
+            </tr>
+          </table>
         </div>
         """
     }

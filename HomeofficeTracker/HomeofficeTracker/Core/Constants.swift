@@ -26,25 +26,35 @@ func savings(days: Int) -> Double {
 /// ⚠️ Wechsel der Sätze nach Jahren:
 ///   - bis 2020: 0,30 €/km einheitlich für alle Kilometer
 ///   - 2021:     0,30 €/km (1–20 km) + 0,35 €/km (ab 21 km)
-///   - ab 2022:  0,30 €/km (1–20 km) + 0,38 €/km (ab 21 km) — dauerhaft
-///   Quelle: Steuerentlastungsgesetz 2022 (BGBl. I S. 749)
+///   - 2022–2025: 0,30 €/km (1–20 km) + 0,38 €/km (ab 21 km)
+///     Quelle: Steuerentlastungsgesetz 2022 (BGBl. I S. 749)
+///   - ab 2026:  0,38 €/km einheitlich für ALLE Kilometer (Flat Rate, kein Schwellenwert mehr)
+///     Quelle: Steueränderungsgesetz 2025 (BGBl. I Nr. 363/2025, verkündet 23.12.2025)
 enum CommuterConstants {
 
     // MARK: - Feste Sätze
 
-    /// Einheitssatz für die ersten 20 km — seit 2004 unverändert.
+    /// Einheitssatz für die ersten 20 km — gilt für Steuerjahre bis 2025.
     static let rateTo20km: Double = 0.30
 
     /// Jahreshöchstbetrag bei Kfz-Nutzung pro Dienstverhältnis
     /// (§9 Abs. 1 Satz 3 Nr. 4 Satz 2 EStG) — seit 2004 unverändert.
     static let annualCapCar: Double = 4_500.00
 
-    /// Schwellenwert für den erhöhten Satz ab 2021.
+    /// Schwellenwert für den erhöhten Satz (gilt nur für Steuerjahre bis 2025).
     static let threshold: Int = 20
+
+    /// Flat-Rate-Satz ab 2026: 0,38 €/km einheitlich für alle Kilometer.
+    /// Steueränderungsgesetz 2025, BGBl. I Nr. 363/2025.
+    static let flatRateFrom2026: Double = 0.38
 
     // MARK: - Jahresabhängige Sätze
 
-    /// Satz ab dem 21. km für ein gegebenes Steuerjahr.
+    /// Ab 2026 gilt ein einheitlicher Flat-Rate — kein Schwellenwert mehr.
+    /// Steueränderungsgesetz 2025 (BGBl. I Nr. 363/2025).
+    static func isFlatRate(year: Int) -> Bool { year >= 2026 }
+
+    /// Satz ab dem 21. km für ein gegebenes Steuerjahr (nur relevant bis 2025).
     /// Vor 2021: identisch mit `rateTo20km` (einheitlicher Satz für alle km).
     static func rateFrom21km(year: Int) -> Double {
         if year >= 2022 { return 0.38 }
@@ -59,6 +69,10 @@ enum CommuterConstants {
     /// - Parameter year: Steuerjahr für jahresabhängigen Satz (Default: aktuelles Jahr)
     static func deductionPerDay(distanceKm: Int, year: Int = Calendar.current.component(.year, from: Date())) -> Double {
         guard distanceKm > 0 else { return 0 }
+        // Ab 2026: Flat Rate 0,38 €/km für alle Kilometer (Steueränderungsgesetz 2025)
+        if isFlatRate(year: year) {
+            return Double(distanceKm) * flatRateFrom2026
+        }
         let first = Double(min(distanceKm, threshold)) * rateTo20km
         let beyond = Double(max(0, distanceKm - threshold)) * rateFrom21km(year: year)
         return first + beyond

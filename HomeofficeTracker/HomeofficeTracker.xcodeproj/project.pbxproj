@@ -43,6 +43,7 @@
 		DA846B872F95446D00437148 /* HomeofficeWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HomeofficeWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA846BAA2F954AAA00000002 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		DA846BAA2F954AAA00000003 /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = System/Library/Frameworks/AppIntents.framework; sourceTree = SDKROOT; };
+		DA8F554C2F9A90C100380C54 /* HomeofficeTracker.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HomeofficeTracker.storekit; sourceTree = "<group>"; };
 		DAFDBF872F8D580700A79B12 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		DAFDBF892F8D580700A79B12 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		DAFDBFA22F8D587800A79B12 /* HomeofficeWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomeofficeWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -56,11 +57,21 @@
 			);
 			target = DA846B862F95446D00437148 /* HomeofficeWidgetExtensionExtension */;
 		};
+		DA8F554B2F9A8F7500380C54 /* Exceptions for "HomeofficeTracker" folder in "HomeofficeTracker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DA0604752F8A72C00079EBB8 /* HomeofficeTracker */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DA0604782F8A72C00079EBB8 /* HomeofficeTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DA8F554B2F9A8F7500380C54 /* Exceptions for "HomeofficeTracker" folder in "HomeofficeTracker" target */,
+			);
 			path = HomeofficeTracker;
 			sourceTree = "<group>";
 		};
@@ -99,6 +110,7 @@
 		DA06046D2F8A72C00079EBB8 = {
 			isa = PBXGroup;
 			children = (
+				DA8F554C2F9A90C100380C54 /* HomeofficeTracker.storekit */,
 				DAFDBFA22F8D587800A79B12 /* HomeofficeWidgetExtension.entitlements */,
 				DA846BAA2F954AAA00000001 /* HomeofficeWidgetExtension */,
 				DA0604782F8A72C00079EBB8 /* HomeofficeTracker */,
@@ -386,10 +398,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeofficeTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -424,10 +437,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeofficeTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -579,10 +593,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeofficeTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -617,10 +632,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeTracker/HomeofficeTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HomeofficeTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -653,7 +669,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
@@ -683,7 +699,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
@@ -713,7 +729,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";
@@ -743,7 +759,7 @@
 				APPINTENTS_DEPLOY_SWIFT_SOURCES = YES;
 				CODE_SIGN_ENTITLEMENTS = HomeofficeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = C867M6RJFS;
 				INFOPLIST_FILE = HomeofficeWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Homeoffice Widget";

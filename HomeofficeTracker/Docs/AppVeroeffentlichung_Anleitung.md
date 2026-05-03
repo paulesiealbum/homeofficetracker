@@ -196,8 +196,8 @@ Gehe zurück zu https://appstoreconnect.apple.com → deine App
 Scrolle zu **"Build"** → klicke **"+"** → wähle den gerade hochgeladenen Build
 (Kann 10–30 Minuten dauern bis der Build erscheint — Kaffee holen)
 
-### Metadaten ausfüllen (aus AppStoreSubmission.md)
-- **Description**: (Text aus AppStoreSubmission.md kopieren)
+### Metadaten ausfüllen
+- **Description**: (Text aus `Docs/AppStoreSubmission.md` kopieren)
 - **Keywords**: `homeoffice,steuer,finanzamt,arbeitszimmer,home office,steuererklärung,tracker`
 - **Support URL**: GitHub-Seite oder eigene Website
 

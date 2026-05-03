@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import StoreKit
 import UIKit
 
@@ -8,6 +9,10 @@ struct SettingsView: View {
     @State private var editingPeriod: WorkplacePeriod? = nil
     @FocusState private var distanceFieldFocused: Bool
     @State private var notificationPermissionDenied = false
+
+    /// Alle eingetragenen Sondertage (Urlaub, Krank usw.) für die Reminder-Planung.
+    @Query(filter: #Predicate<WorkDay> { $0.specialType != nil })
+    private var specialWorkDays: [WorkDay]
 
     var body: some View {
         NavigationStack {
@@ -162,7 +167,11 @@ struct SettingsView: View {
             Text("Pendlerpauschale")
         } footer: {
             if AppConfig.shared.isPremium {
-                Text("Berechnung gemäß § 9 Abs. 1 Satz 3 Nr. 4 EStG: 0,30 €/km bis 20 km, 0,38 €/km ab 21 km (ab 2022). Mehrere Arbeitsstätten möglich – für Arbeitgeberwechsel (Zeitraum) oder mehrere Dienstverhältnisse gleichzeitig. Kein Ersatz für Steuerberatung.")
+                let currentYear = Calendar.current.component(.year, from: Date())
+                let rateText = CommuterConstants.isFlatRate(year: currentYear)
+                    ? "0,38 €/km für alle km (ab 2026, Steueränderungsgesetz 2025)"
+                    : "0,30 €/km bis 20 km, 0,38 €/km ab 21 km (ab 2022)"
+                Text("Berechnung gemäß § 9 Abs. 1 Satz 3 Nr. 4 EStG: \(rateText). Mehrere Arbeitsstätten möglich – für Arbeitgeberwechsel (Zeitraum) oder mehrere Dienstverhältnisse gleichzeitig. Kein Ersatz für Steuerberatung.")
             } else {
                 Text("Einfache Entfernung eintragen. Mit Premium: Mehrere Arbeitsstätten, Zeiträume und Pauschale automatisch berechnen.")
             }
@@ -183,7 +192,10 @@ struct SettingsView: View {
                                 schedule.reminderEnabled = true
                                 NotificationService.shared.scheduleReminder(
                                     hour: schedule.reminderHour,
-                                    minute: schedule.reminderMinute
+                                    minute: schedule.reminderMinute,
+                                    workingDays: schedule.workingDays,
+                                    state: FederalState(rawValue: schedule.federalState) ?? .nw,
+                                    specialWorkDays: specialWorkDays
                                 )
                             } else {
                                 notificationPermissionDenied = true
@@ -214,7 +226,10 @@ struct SettingsView: View {
                             schedule.reminderMinute = comps.minute ?? 0
                             NotificationService.shared.scheduleReminder(
                                 hour: schedule.reminderHour,
-                                minute: schedule.reminderMinute
+                                minute: schedule.reminderMinute,
+                                workingDays: schedule.workingDays,
+                                state: FederalState(rawValue: schedule.federalState) ?? .nw,
+                                specialWorkDays: specialWorkDays
                             )
                         }
                     ),
