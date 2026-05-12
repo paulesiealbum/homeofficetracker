@@ -473,8 +473,8 @@ struct OnboardingView: View {
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
-        .onChange(of: store.isPurchased) { _, purchased in
-            if purchased {
+        .onChange(of: store.hasAnyPremium) { _, active in
+            if active {
                 schedule.hasCompletedOnboarding = true
                 dismiss()
             }
@@ -826,7 +826,7 @@ struct OnboardingView: View {
                     PremiumFeatureRow(
                         icon: "doc.text.fill", color: .blue,
                         title: "CSV & PDF Export (Premium)",
-                        subtitle: "Für Steuerberater — einmalig \(store.subscriptionProduct?.displayPrice ?? "2,99 €") freischalten"
+                        subtitle: "Für Steuerberater — \(store.subscriptionProduct?.displayPrice ?? "2,99 €")/Jahr"
                     )
                     Divider().padding(.leading, 56)
                     PremiumFeatureRow(
@@ -836,9 +836,9 @@ struct OnboardingView: View {
                     )
                     Divider().padding(.leading, 56)
                     PremiumFeatureRow(
-                        icon: "checkmark.seal.fill", color: .orange,
-                        title: "Einmaliger Kauf — kein Abo",
-                        subtitle: "Einmalig freischalten, für immer nutzen"
+                        icon: "arrow.clockwise.circle.fill", color: .emerald,
+                        title: "Jahres-Abo — jederzeit kündbar",
+                        subtitle: "\(store.subscriptionProduct?.displayPrice ?? "2,99 €")/Jahr · Abo verlängert sich automatisch"
                     )
                 }
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 14))
